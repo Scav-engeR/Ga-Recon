@@ -1,0 +1,57 @@
+name: 🔎 Enhanced Recon workflow
+
+on:
+  # schedule:
+  #   - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Amass - Enumeration
+        uses: fguisso/amass-action@main
+        with:
+          domains: |
+            owasp.org
+            exploit-db.com
+            rapid7.com
+            tenable.com
+            packetstormsecurity.com
+            securityfocus.com
+            offensive-security.com
+            cvedetails.com
+            kali.org
+            sans.org
+            vulners.com
+            zaproxy.org
+            portswigger.net
+            burpsuite.com
+          brute: true
+          output: hosts.txt
+          
+      - name: Naabu - Port Scanner
+        uses: projectdiscovery/naabu-action@main
+        with:
+          list: hosts.txt
+          output: urls.txt
+            
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          urls: urls.txt
+          output: nuclei.txt
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: recon-artifacts
+          path: |
+            hosts.txt
+            urls.txt
+            nuclei.txt
