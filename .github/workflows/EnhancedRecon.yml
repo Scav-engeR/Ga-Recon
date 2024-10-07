@@ -15,7 +15,7 @@ jobs:
           go-version: 1.21
 
       - name: Amass - Enumeration
-        uses: owasp-amass/amass@main
+        uses: owasp-amass/amass@master
         with:
           domains: |
             owasp.org
