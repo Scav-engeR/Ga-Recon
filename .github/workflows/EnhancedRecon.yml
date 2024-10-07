@@ -15,7 +15,7 @@ jobs:
           go-version: 1.21
 
       - name: Amass - Enumeration
-        uses: fguisso/amass-action@main
+        uses: owasp-amass/amass@main
         with:
           domains: |
             owasp.org
